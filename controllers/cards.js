@@ -1,9 +1,9 @@
 const Card = require("../models/card");
 
 module.exports.createCard = (req, res) => {
-  const { title, text, ownerId } = req.body;
+  const { name, link, ownerId } = req.body;
 
-  Card.create({ title, text, owner: ownerId }).then((card) =>
+  Card.create({ name, link, owner: ownerId }).then((card) =>
     res.send({ data: card })
   );
 };
