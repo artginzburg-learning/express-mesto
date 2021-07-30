@@ -16,6 +16,20 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndDelete(req.params.cardId).then((value) =>
-    res.send({ message: value })
+    res.send({ message: "Успешно" })
   );
 };
+
+module.exports.likeCard = (req, res) =>
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true }
+  );
+
+module.exports.unLikeCard = (req, res) =>
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  );

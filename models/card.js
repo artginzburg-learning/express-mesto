@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validateUrl = require("../utils/validateUrl");
 
 const cardSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     minlength: 2,
     maxlength: 30,
