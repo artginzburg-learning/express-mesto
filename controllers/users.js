@@ -30,10 +30,16 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user.id, { name, about });
+
+  User.findByIdAndUpdate(req.user.id, { name, about })
+    .then(() => res.send({ message: "Успешно" }))
+    .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
 };
 
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user.id, { avatar });
+
+  User.findByIdAndUpdate(req.user.id, { avatar })
+    .then(() => res.send({ message: "Успешно" }))
+    .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
 };
