@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "npx eslint .",
     "start": "node app",
-    "dev": "nodemon"
+    "dev": "nodemon -q"
   },
   "repository": {
     "type": "git",

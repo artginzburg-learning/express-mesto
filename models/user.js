@@ -22,4 +22,12 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.pre("save", function (error, doc, next) {
+  if (error.name === "DocumentNotFoundError") {
+    next(new Error(404));
+  } else {
+    next();
+  }
+});
+
 module.exports = mongoose.model("user", userSchema);
