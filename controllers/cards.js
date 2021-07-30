@@ -8,8 +8,14 @@ module.exports.createCard = (req, res) => {
   );
 };
 
-module.exports.getCard = (req, res) => {
+module.exports.getCards = (req, res) => {
   Card.find({})
     .populate(["owner", "likes"])
     .then((card) => res.send({ data: card }));
+};
+
+module.exports.deleteCard = (req, res) => {
+  Card.findByIdAndDelete(req.params.cardId).then((value) =>
+    res.send({ message: value })
+  );
 };
