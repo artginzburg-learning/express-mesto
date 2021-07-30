@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const validateUrl = require("../utils/validateUrl");
+const validateUrl = require("./helpers/validateUrl");
 
 const userSchema = new mongoose.Schema({
   name: {
