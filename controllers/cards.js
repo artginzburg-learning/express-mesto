@@ -1,18 +1,20 @@
 const Card = require("../models/card");
 
+const defaultPopulation = ["owner", "likes"];
+
+const sendAsData = async (card) => res.send({ data: card });
+
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
   const ownerId = req.user._id;
 
-  Card.create({ name, link, owner: ownerId }).then((card) =>
-    res.send({ data: card })
-  );
+  Card.create({ name, link, owner: ownerId }).then(sendAsData);
 };
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .populate(["owner", "likes"])
+    .populate(defaultPopulation)
     .then((card) => res.send({ data: card }));
 };
 
@@ -28,8 +30,8 @@ module.exports.likeCard = (req, res) =>
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-    .populate(["owner", "likes"])
-    .then((value) => res.send({ data: value }))
+    .populate(defaultPopulation)
+    .then(sendAsData)
     .catch(console.error);
 
 module.exports.unLikeCard = (req, res) =>
@@ -38,6 +40,6 @@ module.exports.unLikeCard = (req, res) =>
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-    .populate(["owner", "likes"])
-    .then((value) => res.send({ data: value }))
+    .populate(defaultPopulation)
+    .then(sendAsData)
     .catch(console.error);
