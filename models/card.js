@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
+
 const validateUrl = require("./helpers/validateUrl");
+const defaultLengthConstrained = require("./helpers/defaultLengthConstrained");
 
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 2,
-    maxlength: 30,
+    ...defaultLengthConstrained,
     required: true,
   },
   link: {
@@ -18,11 +19,12 @@ const cardSchema = new mongoose.Schema({
     ref: "user",
     required: true,
   },
-  likes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "user",
-    default: [],
-  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now(),

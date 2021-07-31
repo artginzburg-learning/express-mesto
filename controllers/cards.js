@@ -24,14 +24,20 @@ module.exports.deleteCard = (req, res) => {
 
 module.exports.likeCard = (req, res) =>
   Card.findByIdAndUpdate(
-    req.params.cardId,
+    req.params.id,
     { $addToSet: { likes: req.user._id } },
     { new: true }
-  );
+  )
+    .populate(["owner", "likes"])
+    .then((value) => res.send({ data: value }))
+    .catch(console.error);
 
 module.exports.unLikeCard = (req, res) =>
   Card.findByIdAndUpdate(
-    req.params.cardId,
+    req.params.id,
     { $pull: { likes: req.user._id } },
     { new: true }
-  );
+  )
+    .populate(["owner", "likes"])
+    .then((value) => res.send({ data: value }))
+    .catch(console.error);
