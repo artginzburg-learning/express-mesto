@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const stringWithConstrainedLength = require("./helpers/stringWithConstrainedLength");
 const validateUrl = require("./helpers/validateUrl");
 
+const refUserId = {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "user",
+};
+
 const cardSchema = new mongoose.Schema({
   name: {
     ...stringWithConstrainedLength,
@@ -14,14 +19,12 @@ const cardSchema = new mongoose.Schema({
     validator: validateUrl,
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ...refUserId,
     required: true,
   },
   likes: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ...refUserId,
     },
   ],
   createdAt: {
