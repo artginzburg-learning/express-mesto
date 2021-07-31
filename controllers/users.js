@@ -10,7 +10,7 @@ module.exports.getUsers = (req, res) => {
     );
 };
 
-module.exports.findUser = (req, res) => {
+module.exports.findUser = (req, res) =>
   User.findById(req.params.id)
     .then((user) => res.send({ data: user }))
     .catch((user) =>
@@ -18,7 +18,6 @@ module.exports.findUser = (req, res) => {
         "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое"
       )
     );
-};
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -32,7 +31,7 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
-    req.user.id,
+    req.user._id,
     { name, about },
     {
       new: true,
@@ -46,7 +45,7 @@ module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
-    req.user.id,
+    req.user._id,
     { avatar },
     {
       new: true,
