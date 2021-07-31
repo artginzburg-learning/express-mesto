@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 
+const stringWithConstrainedLength = require("./helpers/stringWithConstrainedLength");
 const validateUrl = require("./helpers/validateUrl");
-const defaultLengthConstrained = require("./helpers/defaultLengthConstrained");
 
 const cardSchema = new mongoose.Schema({
   name: {
-    type: String,
-    ...defaultLengthConstrained,
+    ...stringWithConstrainedLength,
     required: true,
   },
   link: {
