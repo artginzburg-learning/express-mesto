@@ -11,19 +11,6 @@
     "type": "git",
     "url": "git+https://github.com/artginzburg/express-mesto.git"
   },
-  "eslintConfig": {
-    "extends": "airbnb-base",
-    "rules": {
-      "no-underscore-dangle": [
-        "error",
-        {
-          "allow": [
-            "_id"
-          ]
-        }
-      ]
-    }
-  },
   "author": "Art Ginzburg",
   "license": "ISC",
   "bugs": {

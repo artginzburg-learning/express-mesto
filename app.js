@@ -36,6 +36,9 @@ app.use('/users', require('./routes/users'));
 
 app.use('/cards', require('./routes/cards'));
 
-app.use((req, res) => res.status(errors.codes.notFound).send({ message: errors.messages.castError }));
+app.use((req, res) => res
+  .status(errors.codes.notFound)
+  .send({ message: errors.messages.castError }));
 
+// eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`API listening on http://${HOST}:${PORT}`));

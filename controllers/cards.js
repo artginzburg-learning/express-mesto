@@ -22,7 +22,7 @@ module.exports.createCard = (req, res) => {
 module.exports.getCards = (req, res) => Card.find({})
   .populate(defaultPopulation)
   .then((data) => res.send({ data }))
-  .catch((err) => res
+  .catch(() => res
     .status(errors.codes.serverError)
     .send({ message: errors.messages.default }));
 
