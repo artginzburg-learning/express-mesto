@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 
 const { PORT = 3000, HOST = "localhost" } = process.env;
 
@@ -14,7 +13,7 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 function setRunValidators() {
   if ("runValidators" in this.getOptions()) {
