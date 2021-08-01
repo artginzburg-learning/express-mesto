@@ -15,20 +15,6 @@ app.use(
 
 app.use(express.json());
 
-function setRunValidators() {
-  if ("runValidators" in this.getOptions()) {
-    return;
-  }
-  this.setOptions({ runValidators: true });
-}
-
-mongoose.plugin((schema) => {
-  schema.pre("findOneAndUpdate", setRunValidators);
-  schema.pre("updateMany", setRunValidators);
-  schema.pre("updateOne", setRunValidators);
-  schema.pre("update", setRunValidators);
-});
-
 mongoose.connect(`mongodb://${HOST}:27017/mestodb`, {
   useNewUrlParser: true,
   useCreateIndex: true,

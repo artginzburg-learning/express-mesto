@@ -2,14 +2,17 @@ const Card = require("../models/card");
 
 const defaultPopulation = ["owner", "likes"];
 
-const sendAsData = async (card) => res.send({ data: card });
-
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
   const ownerId = req.user._id;
 
-  Card.create({ name, link, owner: ownerId }).then(sendAsData);
+  Card.create({ name, link, owner: ownerId })
+
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 module.exports.getCards = (req, res) => {
@@ -31,7 +34,7 @@ module.exports.likeCard = (req, res) =>
     { new: true }
   )
     .populate(defaultPopulation)
-    .then(sendAsData)
+    .then((card) => res.send({ data: card }))
     .catch(console.error);
 
 module.exports.unLikeCard = (req, res) =>
@@ -41,5 +44,5 @@ module.exports.unLikeCard = (req, res) =>
     { new: true }
   )
     .populate(defaultPopulation)
-    .then(sendAsData)
+    .then((card) => res.send({ data: card }))
     .catch(console.error);
