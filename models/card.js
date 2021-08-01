@@ -8,31 +8,34 @@ const refUserId = {
   ref: "user",
 };
 
-const cardSchema = new mongoose.Schema({
-  name: {
-    ...stringWithConstrainedLength,
-    required: true,
-  },
-  link: {
-    type: String,
-    required: true,
-    validator: validateUrl,
-  },
-  owner: {
-    ...refUserId,
-    required: true,
-  },
-  likes: [
-    {
-      ...refUserId,
+const cardSchema = new mongoose.Schema(
+  {
+    name: {
+      ...stringWithConstrainedLength,
+      required: true,
     },
-  ],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    immutable: true,
+    link: {
+      type: String,
+      required: true,
+      validator: validateUrl,
+    },
+    owner: {
+      ...refUserId,
+      required: true,
+    },
+    likes: [
+      {
+        ...refUserId,
+      },
+    ],
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      immutable: true,
+    },
   },
-});
+  { versionKey: false }
+);
 
 const Card = mongoose.model("card", cardSchema);
 
