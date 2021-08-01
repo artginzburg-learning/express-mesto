@@ -34,6 +34,7 @@ module.exports.updateUser = (req, res) => {
     req.user._id,
     { name, about },
     {
+      runValidators: true,
       new: true,
     }
   )
@@ -48,6 +49,7 @@ module.exports.updateUserAvatar = (req, res) => {
     req.user._id,
     { avatar },
     {
+      runValidators: true,
       new: true,
     }
   )

@@ -8,7 +8,6 @@ module.exports.createCard = (req, res) => {
   const ownerId = req.user._id;
 
   Card.create({ name, link, owner: ownerId })
-
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       console.log(err);
