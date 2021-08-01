@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const stringWithConstrainedLength = require("./helpers/stringWithConstrainedLength");
-const validateUrl = require("./helpers/validateUrl");
+const stringWithConstrainedLength = require('./helpers/stringWithConstrainedLength');
+const validateUrl = require('./helpers/validateUrl');
 
 const refUserId = {
   type: mongoose.Schema.Types.ObjectId,
-  ref: "user",
+  ref: 'user',
 };
 
 const cardSchema = new mongoose.Schema(
@@ -34,9 +34,9 @@ const cardSchema = new mongoose.Schema(
       immutable: true,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
-const Card = mongoose.model("card", cardSchema);
+const Card = mongoose.model('card', cardSchema);
 
 module.exports = Card;

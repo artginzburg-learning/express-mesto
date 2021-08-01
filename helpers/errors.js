@@ -1,12 +1,12 @@
 const errors = {
   names: {
-    cast: "CastError",
-    validation: "ValidationError",
+    cast: 'CastError',
+    validation: 'ValidationError',
   },
   messages: {
-    default: "Ошибка обработки запроса",
-    castError: "Запрашиваемый ресурс не найден",
-    validationError: "Переданы некорректные данные",
+    default: 'Ошибка обработки запроса',
+    castError: 'Запрашиваемый ресурс не найден',
+    validationError: 'Переданы некорректные данные',
   },
   codes: {
     badRequest: 400,
