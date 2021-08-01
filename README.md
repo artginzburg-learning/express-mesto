@@ -17,3 +17,7 @@
 `npm start` — запускает сервер
 `npm run dev` — запускает сервер с hot-reload
 `npm run lint` — проверить ошибки в стиле написания кода
+
+### Ссылки
+
+- [Чеклист 13](https://code.s3.yandex.net/web-developer/checklists/new-program/checklist-13/index.html)
