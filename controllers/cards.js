@@ -51,13 +51,20 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
     : res
       .status(errors.codes.notFound)
       .send({ message: errors.messages.castError })))
-  .catch((err) => (err.name === errors.names.validation
-    ? res
-      .status(errors.codes.badRequest)
-      .send({ message: errors.messages.validationError })
-    : res
-      .status(errors.codes.serverError)
-      .send({ message: errors.messages.default })));
+  .catch((err) => {
+    if (err.name === errors.names.validation) {
+      return res
+        .status(errors.codes.badRequest)
+        .send({ message: errors.messages.validationError });
+    }
+    return err.name === errors.names.cast
+      ? res
+        .status(errors.codes.badRequest)
+        .send({ message: errors.messages.castError })
+      : res
+        .status(errors.codes.serverError)
+        .send({ message: errors.messages.default });
+  });
 
 module.exports.unLikeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.id,
@@ -70,10 +77,17 @@ module.exports.unLikeCard = (req, res) => Card.findByIdAndUpdate(
     : res
       .status(errors.codes.notFound)
       .send({ message: errors.messages.castError })))
-  .catch((err) => (err.name === errors.names.validation
-    ? res
-      .status(errors.codes.badRequest)
-      .send({ message: errors.messages.validationError })
-    : res
-      .status(errors.codes.serverError)
-      .send({ message: errors.messages.default })));
+  .catch((err) => {
+    if (err.name === errors.names.validation) {
+      return res
+        .status(errors.codes.badRequest)
+        .send({ message: errors.messages.validationError });
+    }
+    return err.name === errors.names.cast
+      ? res
+        .status(errors.codes.badRequest)
+        .send({ message: errors.messages.castError })
+      : res
+        .status(errors.codes.serverError)
+        .send({ message: errors.messages.default });
+  });
