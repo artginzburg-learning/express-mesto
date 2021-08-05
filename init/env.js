@@ -9,16 +9,14 @@ const JWT_SECRET = crypto.randomBytes(32).toString('hex');
 
 const env = `${staticEnv}${JWT_SECRET}`;
 
-async function upsertFile(name, valueIfNotFound) {
-  const nameFromDirname = `${__dirname}/${name}`;
-  try {
-    await fs.promises.readFile(nameFromDirname);
-  } catch (error) {
-    await fs.promises.writeFile(nameFromDirname, valueIfNotFound);
-  }
+async function upsertFile(name, dataIfNotFound) {
+  const path = `${__dirname}/${name}`;
+  fs.writeFile(path, dataIfNotFound, { flag: 'wx' }, (err) => {
+    if (err) {
+      return;
+    }
+    console.log('Initiated .env file');
+  });
 }
-
-console.log('Initiating environment variables:');
-console.log(env);
 
 upsertFile(envPath, env);
