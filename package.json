@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Проект 'Mesto' фронтенд и бэкенд",
   "scripts": {
-    "lint": "npx eslint .",
     "start": "node app",
-    "dev": "nodemon -q"
+    "prepare": "node init",
+    "dev": "nodemon -q",
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
