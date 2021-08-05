@@ -3,7 +3,6 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
-const mongoose = require('mongoose');
 
 const errors = require('./helpers/errors');
 const { StatusCodes } = require('./helpers/StatusCodes');
@@ -29,13 +28,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-
-mongoose.connect(`mongodb://${HOST}:27017/mestodb`, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-});
 
 app.use((req, res, next) => {
   req.user = {

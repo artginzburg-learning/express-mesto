@@ -1,4 +1,4 @@
-const Card = require('../models/card');
+const { Card } = require('../models');
 
 const errors = require('../helpers/errors');
 const { StatusCodes } = require('../helpers/StatusCodes');
