@@ -6,7 +6,7 @@ const User = require('../models/user');
 const errors = require('../helpers/errors');
 const { StatusCodes } = require('../helpers/StatusCodes');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../helpers/constants');
 
 const options = {
   runValidators: true,
@@ -116,7 +116,7 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-dev-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
       res.send({ token });
     })
