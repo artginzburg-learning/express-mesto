@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -12,12 +13,12 @@ const { PORT = 3000, HOST = 'localhost' } = process.env;
 
 const app = express();
 
-app.use(
-  cors({
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true,
-  }),
-);
+app.use(helmet());
+
+app.use(cors({
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  credentials: true,
+}));
 
 app.use(express.json());
 
