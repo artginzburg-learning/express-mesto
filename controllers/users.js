@@ -19,6 +19,20 @@ module.exports.getUsers = (req, res) => User.find({})
     .status(StatusCodes.internalServerError)
     .send({ message: errors.messages.default }));
 
+module.exports.getCurrentUser = (req, res) => User.findById(req.user._id).select('-password')
+  .then((data) => (data
+    ? res.send({ data })
+    : res
+      .status(StatusCodes.notFound)
+      .send({ message: errors.messages.castError })))
+  .catch((err) => (err.name === errors.names.cast
+    ? res
+      .status(StatusCodes.badRequest)
+      .send({ message: errors.messages.castError })
+    : res
+      .status(StatusCodes.internalServerError)
+      .send({ message: errors.messages.default })));
+
 module.exports.findUser = (req, res) => User.findById(req.params.id).select('-password')
   .then((data) => (data
     ? res.send({ data })
