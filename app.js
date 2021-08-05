@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -12,6 +13,11 @@ const { StatusCodes } = require('./helpers/StatusCodes');
 const { PORT = 3000, HOST = 'localhost' } = process.env;
 
 const app = express();
+
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000, // in 15m...
+  max: 100, // requests per IP.
+}));
 
 app.use(helmet());
 
