@@ -1,6 +1,10 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
 
 const errors = require('../helpers/errors');
+const { StatusCodes } = require('../helpers/StatusCodes');
 
 const options = {
   runValidators: true,
@@ -10,21 +14,21 @@ const options = {
 module.exports.getUsers = (req, res) => User.find({})
   .then((data) => res.send({ data }))
   .catch(() => res
-    .status(errors.codes.serverError)
+    .status(StatusCodes.internalServerError)
     .send({ message: errors.messages.default }));
 
 module.exports.findUser = (req, res) => User.findById(req.params.id)
   .then((data) => (data
     ? res.send({ data })
     : res
-      .status(errors.codes.notFound)
+      .status(StatusCodes.notFound)
       .send({ message: errors.messages.castError })))
   .catch((err) => (err.name === errors.names.cast
     ? res
-      .status(errors.codes.badRequest)
+      .status(StatusCodes.badRequest)
       .send({ message: errors.messages.castError })
     : res
-      .status(errors.codes.serverError)
+      .status(StatusCodes.internalServerError)
       .send({ message: errors.messages.default })));
 
 module.exports.createUser = (req, res) => {
@@ -34,10 +38,10 @@ module.exports.createUser = (req, res) => {
     .then((data) => res.send({ data }))
     .catch((err) => (err.name === errors.names.validation
       ? res
-        .status(errors.codes.badRequest)
+        .status(StatusCodes.badRequest)
         .send({ message: errors.messages.validationError })
       : res
-        .status(errors.codes.serverError)
+        .status(StatusCodes.internalServerError)
         .send({ message: errors.messages.default })));
 };
 
@@ -48,20 +52,20 @@ module.exports.updateUser = (req, res) => {
     .then((data) => (data
       ? res.send({ data })
       : res
-        .status(errors.codes.notFound)
+        .status(StatusCodes.notFound)
         .send({ message: errors.messages.castError })))
     .catch((err) => {
       if (err.name === errors.names.validation) {
         return res
-          .status(errors.codes.badRequest)
+          .status(StatusCodes.badRequest)
           .send({ message: errors.messages.validationError });
       }
       return err.name === errors.names.cast
         ? res
-          .status(errors.codes.badRequest)
+          .status(StatusCodes.badRequest)
           .send({ message: errors.messages.castError })
         : res
-          .status(errors.codes.serverError)
+          .status(StatusCodes.internalServerError)
           .send({ message: errors.messages.default });
     });
 };
@@ -73,20 +77,47 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((data) => (data
       ? res.send({ data })
       : res
-        .status(errors.codes.notFound)
+        .status(StatusCodes.notFound)
         .send({ message: errors.messages.castError })))
     .catch((err) => {
       if (err.name === errors.names.validation) {
         return res
-          .status(errors.codes.badRequest)
+          .status(StatusCodes.badRequest)
           .send({ message: errors.messages.validationError });
       }
       return err.name === errors.names.cast
         ? res
-          .status(errors.codes.badRequest)
+          .status(StatusCodes.badRequest)
           .send({ message: errors.messages.castError })
         : res
-          .status(errors.codes.serverError)
+          .status(StatusCodes.internalServerError)
           .send({ message: errors.messages.default });
+    });
+};
+
+module.exports.createUser = (req, res) => bcrypt.hash(req.body.password, 10)
+  .then((hash) => User.create({
+    email: req.body.email,
+    password: hash,
+  }).select('-password'))
+  .then((data) => res.status(StatusCodes.created).send({ data }))
+  .catch(() => res.status(StatusCodes.badRequest).send({ message: errors.messages.castError }));
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      // аутентификация успешна! пользователь в переменной user
+      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '30d' });
+
+      // вернём токен
+      res.send({ token });
+    })
+    .catch((err) => {
+      // возвращаем ошибку аутентификации
+      res
+        .status(StatusCodes.unauthorized)
+        .send({ message: err.message });
     });
 };

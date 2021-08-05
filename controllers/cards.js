@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 
 const errors = require('../helpers/errors');
+const { StatusCodes } = require('../helpers/StatusCodes');
 
 const options = { new: true };
 const defaultPopulation = ['owner', 'likes'];
@@ -12,10 +13,10 @@ module.exports.createCard = (req, res) => {
     .then((data) => res.send({ data }))
     .catch((err) => (err.name === errors.names.validation
       ? res
-        .status(errors.codes.badRequest)
+        .status(StatusCodes.badRequest)
         .send({ message: errors.messages.validation })
       : res
-        .status(errors.codes.serverError)
+        .status(StatusCodes.internalServerError)
         .send({ message: errors.messages.default })));
 };
 
@@ -23,21 +24,21 @@ module.exports.getCards = (req, res) => Card.find({})
   .populate(defaultPopulation)
   .then((data) => res.send({ data }))
   .catch(() => res
-    .status(errors.codes.serverError)
+    .status(StatusCodes.internalServerError)
     .send({ message: errors.messages.default }));
 
 module.exports.deleteCard = (req, res) => Card.findByIdAndDelete(req.params.id)
   .then((data) => (data
     ? res.send({ data })
     : res
-      .status(errors.codes.notFound)
+      .status(StatusCodes.notFound)
       .send({ message: errors.messages.castError })))
   .catch((err) => (err.name === errors.names.cast
     ? res
-      .status(errors.codes.badRequest)
+      .status(StatusCodes.badRequest)
       .send({ message: errors.messages.castError })
     : res
-      .status(errors.codes.serverError)
+      .status(StatusCodes.internalServerError)
       .send({ message: errors.messages.default })));
 
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
@@ -49,20 +50,20 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   .then((data) => (data
     ? res.send({ data })
     : res
-      .status(errors.codes.notFound)
+      .status(StatusCodes.notFound)
       .send({ message: errors.messages.castError })))
   .catch((err) => {
     if (err.name === errors.names.validation) {
       return res
-        .status(errors.codes.badRequest)
+        .status(StatusCodes.badRequest)
         .send({ message: errors.messages.validationError });
     }
     return err.name === errors.names.cast
       ? res
-        .status(errors.codes.badRequest)
+        .status(StatusCodes.badRequest)
         .send({ message: errors.messages.castError })
       : res
-        .status(errors.codes.serverError)
+        .status(StatusCodes.internalServerError)
         .send({ message: errors.messages.default });
   });
 
@@ -75,19 +76,19 @@ module.exports.unLikeCard = (req, res) => Card.findByIdAndUpdate(
   .then((data) => (data
     ? res.send({ data })
     : res
-      .status(errors.codes.notFound)
+      .status(StatusCodes.notFound)
       .send({ message: errors.messages.castError })))
   .catch((err) => {
     if (err.name === errors.names.validation) {
       return res
-        .status(errors.codes.badRequest)
+        .status(StatusCodes.badRequest)
         .send({ message: errors.messages.validationError });
     }
     return err.name === errors.names.cast
       ? res
-        .status(errors.codes.badRequest)
+        .status(StatusCodes.badRequest)
         .send({ message: errors.messages.castError })
       : res
-        .status(errors.codes.serverError)
+        .status(StatusCodes.internalServerError)
         .send({ message: errors.messages.default });
   });

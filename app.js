@@ -3,6 +3,9 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const errors = require('./helpers/errors');
+const { StatusCodes } = require('./helpers/StatusCodes');
+
+// const auth = require('./middlewares/auth');
 
 const { PORT = 3000, HOST = 'localhost' } = process.env;
 
@@ -32,12 +35,29 @@ app.use((req, res, next) => {
   next();
 });
 
+// app.post('/signup', createUser);
+// app.post('/signin', login);
+// app.use(auth);
+
 app.use('/users', require('./routes/users'));
 
 app.use('/cards', require('./routes/cards'));
 
+// app.use((err, req, res, next) => {
+//   const { statusCode = 500, message } = err;
+
+//   res
+//     .status(statusCode)
+//     .send({
+//       // проверяем статус и выставляем сообщение в зависимости от него
+//       message: statusCode === 500
+//         ? 'На сервере произошла ошибка'
+//         : message,
+//     });
+// });
+
 app.use((req, res) => res
-  .status(errors.codes.notFound)
+  .status(StatusCodes.notFound)
   .send({ message: errors.messages.castError }));
 
 app.listen(PORT, () => console.log(`API listening on http://${HOST}:${PORT}`));
