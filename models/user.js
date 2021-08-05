@@ -2,28 +2,28 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const stringWithConstrainedLength = require('./helpers/stringWithConstrainedLength');
-const validateUrl = require('./helpers/validateUrl');
+const validate = require('./helpers/validate');
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       ...stringWithConstrainedLength,
-      required:
-        'Имя должно быть у каждого пользователя (Пупкин Василий Иванович тоже сойдёт)',
+      default: 'Jacques-Yves Cousteau',
     },
     about: {
       ...stringWithConstrainedLength,
-      required: 'Не одежда, а добротное описание человека красит',
+      default: 'Ocean explorer',
     },
     avatar: {
       type: String,
-      required: 'Извините, но мы встречаем по одёжке',
-      validate: validateUrl,
+      default: '',
+      validate: validate.URL,
     },
     email: {
       type: String,
       required: true,
       unique: true,
+      validate: validate.email,
     },
     password: {
       type: String,

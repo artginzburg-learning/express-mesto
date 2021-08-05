@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const stringWithConstrainedLength = require('./helpers/stringWithConstrainedLength');
-const validateUrl = require('./helpers/validateUrl');
+const validate = require('./helpers/validate');
 
 const refUserId = {
   type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +17,7 @@ const cardSchema = new mongoose.Schema(
     link: {
       type: String,
       required: true,
-      validator: validateUrl,
+      validate: validate.URL,
     },
     owner: {
       ...refUserId,
