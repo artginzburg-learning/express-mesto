@@ -19,7 +19,7 @@ module.exports.getUsers = (req, res) => User.find({})
     .status(StatusCodes.internalServerError)
     .send({ message: errors.messages.default }));
 
-module.exports.findUser = (req, res) => User.findById(req.params.id)
+module.exports.findUser = (req, res) => User.findById(req.params.id).select('-password')
   .then((data) => (data
     ? res.send({ data })
     : res
@@ -33,24 +33,24 @@ module.exports.findUser = (req, res) => User.findById(req.params.id)
       .status(StatusCodes.internalServerError)
       .send({ message: errors.messages.default })));
 
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-
-  User.create({ name, about, avatar })
-    .then((data) => res.send({ data }))
-    .catch((err) => (err.name === errors.names.validation
-      ? res
-        .status(StatusCodes.badRequest)
-        .send({ message: errors.messages.validationError })
-      : res
-        .status(StatusCodes.internalServerError)
-        .send({ message: errors.messages.default })));
-};
+module.exports.createUser = (req, res) => bcrypt.hash(req.body.password, 10)
+  .then((hash) => User.create({
+    email: req.body.email,
+    password: hash,
+  }).select('-password'))
+  .then((data) => res.status(StatusCodes.created).send({ data }))
+  .catch((err) => (err.name === errors.names.validation
+    ? res
+      .status(StatusCodes.badRequest)
+      .send({ message: errors.messages.validationError })
+    : res
+      .status(StatusCodes.internalServerError)
+      .send({ message: errors.messages.default })));
 
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, options)
+  User.findByIdAndUpdate(req.user._id, { name, about }, options).select('-password')
     .then((data) => (data
       ? res.send({ data })
       : res
@@ -75,7 +75,7 @@ module.exports.updateUser = (req, res) => {
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar }, options)
+  User.findByIdAndUpdate(req.user._id, { avatar }, options).select('-password')
     .then((data) => (data
       ? res.send({ data })
       : res
@@ -97,27 +97,16 @@ module.exports.updateUserAvatar = (req, res) => {
     });
 };
 
-module.exports.createUser = (req, res) => bcrypt.hash(req.body.password, 10)
-  .then((hash) => User.create({
-    email: req.body.email,
-    password: hash,
-  }).select('-password'))
-  .then((data) => res.status(StatusCodes.created).send({ data }))
-  .catch(() => res.status(StatusCodes.badRequest).send({ message: errors.messages.castError }));
-
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      // аутентификация успешна! пользователь в переменной user
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-dev-secret', { expiresIn: '30d' });
 
-      // вернём токен
       res.send({ token });
     })
     .catch((err) => {
-      // возвращаем ошибку аутентификации
       res
         .status(StatusCodes.unauthorized)
         .send({ message: err.message });
