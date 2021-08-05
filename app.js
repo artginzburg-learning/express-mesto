@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const errors = require('./helpers/errors');
 const { StatusCodes } = require('./helpers/StatusCodes');
 
+const { createUser, login } = require('./controllers/users');
+
 // const auth = require('./middlewares/auth');
 
 const { PORT = 3000, HOST = 'localhost' } = process.env;
@@ -43,8 +45,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.post('/signup', createUser);
-// app.post('/signin', login);
+app.post('/signup', createUser);
+app.post('/signin', login);
 // app.use(auth);
 
 app.use('/users', require('./routes/users'));
