@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 
 const { StatusCodes } = require('../helpers/StatusCodes');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const tokenPrefix = 'Bearer ';
 
 const handleAuthError = (res) => res
@@ -19,7 +21,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'super-strong-secret');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-dev-secret');
   } catch (err) {
     return handleAuthError(res);
   }

@@ -6,6 +6,8 @@ const User = require('../models/user');
 const errors = require('../helpers/errors');
 const { StatusCodes } = require('../helpers/StatusCodes');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const options = {
   runValidators: true,
   new: true,
@@ -109,7 +111,7 @@ module.exports.login = (req, res) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // аутентификация успешна! пользователь в переменной user
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '30d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-dev-secret', { expiresIn: '30d' });
 
       // вернём токен
       res.send({ token });
