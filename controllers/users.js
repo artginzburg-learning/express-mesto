@@ -126,7 +126,9 @@ module.exports.login = (req, res) => {
         .cookie('jwt', token, {
           maxAge: tokenExpiration.ms,
           httpOnly: true,
-        });
+          sameSite: true,
+        })
+        .end();
     })
     .catch((err) => {
       res
