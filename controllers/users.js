@@ -111,14 +111,22 @@ module.exports.updateUserAvatar = (req, res) => {
     });
 };
 
+const tokenExpiration = { days: 7 };
+tokenExpiration.s = 60 * 60 * 24 * tokenExpiration.days;
+tokenExpiration.ms = 1000 * tokenExpiration.s;
+
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: tokenExpiration.s });
 
-      res.send({ token });
+      res
+        .cookie('jwt', token, {
+          maxAge: tokenExpiration.ms,
+          httpOnly: true,
+        });
     })
     .catch((err) => {
       res
