@@ -8,11 +8,11 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       ...stringWithConstrainedLength,
-      default: 'Jacques-Yves Cousteau',
+      default: 'Jacques Cousteau',
     },
     about: {
       ...stringWithConstrainedLength,
-      default: 'Ocean explorer',
+      default: 'Sailor, Researcher',
     },
     avatar: {
       type: String,
