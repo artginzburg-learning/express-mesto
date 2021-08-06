@@ -9,7 +9,7 @@ const { StatusCodes } = require('./helpers/StatusCodes');
 
 const { createUser, login } = require('./controllers/users');
 
-// const auth = require('./middlewares/auth');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000, HOST = 'localhost' } = process.env;
 
@@ -29,20 +29,12 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '61046313f81802008f17f176',
-  };
-
-  next();
-});
-
 app.post('/signup', createUser);
 app.post('/signin', login);
-// app.use(auth);
+
+app.use(auth);
 
 app.use('/users', require('./routes/users'));
-
 app.use('/cards', require('./routes/cards'));
 
 // app.use((err, req, res, next) => {
