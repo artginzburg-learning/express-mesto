@@ -11,7 +11,7 @@ const handleAuthError = (res) => res
   .send({ message: 'Необходима авторизация' });
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
+  const authorization = req.cookies.jwt;
 
   if (!authorization || !authorization.startsWith(tokenPrefix)) {
     return handleAuthError(res);

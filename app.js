@@ -3,6 +3,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const errors = require('./helpers/errors');
 const { StatusCodes } = require('./helpers/StatusCodes');
@@ -26,6 +27,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true,
 }));
+
+app.use(cookieParser());
 
 app.use(express.json());
 
