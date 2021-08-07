@@ -1,20 +1,19 @@
 const jwt = require('jsonwebtoken');
 
+const errors = require('../helpers/errors');
 const { StatusCodes } = require('../helpers/StatusCodes');
 
 const { JWT_SECRET } = require('../helpers/constants');
 
 const tokenPrefix = 'Bearer ';
 
-const handleAuthError = (res) => res
-  .status(StatusCodes.unauthorized)
-  .send({ message: 'Необходима авторизация' });
-
 module.exports = (req, res, next) => {
   const authorization = req.cookies.jwt;
 
   if (!authorization || !authorization.startsWith(tokenPrefix)) {
-    return handleAuthError(res);
+    return res
+      .status(StatusCodes.forbidden)
+      .send({ message: errors.messages.forbiddenError });
   }
 
   const token = authorization.substring(tokenPrefix.length);
@@ -23,10 +22,12 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return handleAuthError(res);
+    return res
+      .status(StatusCodes.unauthorized)
+      .send({ message: errors.messages.unauthorizedError });
   }
 
-  req.user = payload; // записываем пейлоуд в объект запроса
+  req.user = payload;
 
   return next();
 };

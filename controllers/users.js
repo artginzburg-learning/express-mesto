@@ -130,9 +130,9 @@ module.exports.login = (req, res) => {
         })
         .end();
     })
-    .catch((err) => {
+    .catch(() => {
       res
         .status(StatusCodes.unauthorized)
-        .send({ message: err.message });
+        .send({ message: errors.messages.unauthorizedError });
     });
 };

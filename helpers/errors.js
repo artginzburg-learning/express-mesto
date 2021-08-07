@@ -8,6 +8,7 @@ const errors = {
     castError: 'Запрашиваемый ресурс не найден',
     validationError: 'Переданы некорректные данные',
     forbiddenError: 'Недостаточно прав',
+    unauthorizedError: 'Необходима авторизация',
   },
 };
 
