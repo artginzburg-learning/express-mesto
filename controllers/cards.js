@@ -28,9 +28,9 @@ module.exports.getCards = (req, res) => Card.find({})
     .send({ message: errors.messages.default }));
 
 module.exports.deleteCard = async (req, res) => {
-  const card = await Card.findById(req.params.id).populate(defaultPopulation);
+  const card = await Card.findById(req.params.id);
 
-  return card.owner._id === req.user._id
+  return card.owner.toString() === req.user._id
     ? card.delete()
       .then((data) => (data
         ? res.send({ data })
