@@ -2,7 +2,7 @@ const validator = require('validator');
 
 const validate = {
   URL: {
-    validator: validator.isURL,
+    validator: (link) => validator.isURL(link, { require_protocol: true }),
     message: 'Не похоже на ссылку',
   },
   email: {
