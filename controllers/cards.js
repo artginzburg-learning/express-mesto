@@ -27,19 +27,27 @@ module.exports.getCards = (req, res) => Card.find({})
     .status(StatusCodes.internalServerError)
     .send({ message: errors.messages.default }));
 
-module.exports.deleteCard = (req, res) => Card.findByIdAndDelete(req.params.id)
-  .then((data) => (data
-    ? res.send({ data })
+module.exports.deleteCard = async (req, res) => {
+  const card = await Card.findById(req.params.id).populate(defaultPopulation);
+
+  return card.owner._id === req.user._id
+    ? card.delete()
+      .then((data) => (data
+        ? res.send({ data })
+        : res
+          .status(StatusCodes.notFound)
+          .send({ message: errors.messages.castError })))
+      .catch((err) => (err.name === errors.names.cast
+        ? res
+          .status(StatusCodes.badRequest)
+          .send({ message: errors.messages.castError })
+        : res
+          .status(StatusCodes.internalServerError)
+          .send({ message: errors.messages.default })))
     : res
-      .status(StatusCodes.notFound)
-      .send({ message: errors.messages.castError })))
-  .catch((err) => (err.name === errors.names.cast
-    ? res
-      .status(StatusCodes.badRequest)
-      .send({ message: errors.messages.castError })
-    : res
-      .status(StatusCodes.internalServerError)
-      .send({ message: errors.messages.default })));
+      .status(StatusCodes.forbidden)
+      .send({ message: errors.messages.forbiddenError });
+};
 
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.id,

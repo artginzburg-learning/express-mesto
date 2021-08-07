@@ -7,6 +7,7 @@ const errors = {
     default: 'Ошибка обработки запроса',
     castError: 'Запрашиваемый ресурс не найден',
     validationError: 'Переданы некорректные данные',
+    forbiddenError: 'Недостаточно прав',
   },
 };
 
