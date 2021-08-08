@@ -5,10 +5,11 @@ const {
   updateUser,
   updateUserAvatar,
 } = require('../../controllers/users');
+const { validateUserInfo, validateUserAvatar } = require('../../middlewares/validation');
 
 router.get('/', getCurrentUser);
-router.patch('/', updateUser);
+router.patch('/', validateUserInfo, updateUser);
 
-router.patch('/avatar', updateUserAvatar);
+router.patch('/avatar', validateUserAvatar, updateUserAvatar);
 
 module.exports = router;

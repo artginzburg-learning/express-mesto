@@ -4,12 +4,13 @@ const {
   getUsers,
   findUser,
 } = require('../../controllers/users');
+const { validateObjectId } = require('../../middlewares/validation');
 
 const meRouter = require('./me');
 
 router.get('/', getUsers);
 
-router.get('/:id', findUser);
+router.get('/:id', validateObjectId, findUser);
 
 router.use('/me', meRouter);
 
