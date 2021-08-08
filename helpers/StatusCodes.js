@@ -4,8 +4,9 @@ const StatusCodes = {
   unauthorized: 401,
   forbidden: 403,
   notFound: 404,
-  // conflict: 409,
-  internalServerError: 500,
+  conflict: 409,
+  internal: 500,
+  mongo: 11000,
 };
 
 module.exports = { StatusCodes };

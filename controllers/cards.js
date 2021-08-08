@@ -1,102 +1,81 @@
 const { Card } = require('../models');
 
-const errors = require('../helpers/errors');
+const { classes, names } = require('../errors');
+
 const { StatusCodes } = require('../helpers/StatusCodes');
+
+const {
+  NotFoundError, BadRequestError, ForbiddenError,
+} = classes;
 
 const options = { new: true };
 const defaultPopulation = ['owner', 'likes'];
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((data) => res.send({ data }))
-    .catch((err) => (err.name === errors.names.validation
-      ? res
-        .status(StatusCodes.badRequest)
-        .send({ message: errors.messages.validation })
-      : res
-        .status(StatusCodes.internalServerError)
-        .send({ message: errors.messages.default })));
+    .then((data) => res.status(StatusCodes.created).send({ data }))
+    .catch((err) => next(err.name === names.Validation ? new BadRequestError() : err));
 };
 
-module.exports.getCards = (req, res) => Card.find({})
+module.exports.getCards = (req, res, next) => Card.find({})
   .populate(defaultPopulation)
   .then((data) => res.send({ data }))
-  .catch(() => res
-    .status(StatusCodes.internalServerError)
-    .send({ message: errors.messages.default }));
+  .catch(next);
 
-module.exports.deleteCard = async (req, res) => {
+module.exports.deleteCard = async (req, res, next) => {
   const card = await Card.findById(req.params.id);
 
   return card.owner.toString() === req.user._id
-    ? card.delete()
-      .then((data) => (data
-        ? res.send({ data })
-        : res
-          .status(StatusCodes.notFound)
-          .send({ message: errors.messages.castError })))
-      .catch((err) => (err.name === errors.names.cast
-        ? res
-          .status(StatusCodes.badRequest)
-          .send({ message: errors.messages.castError })
-        : res
-          .status(StatusCodes.internalServerError)
-          .send({ message: errors.messages.default })))
-    : res
-      .status(StatusCodes.forbidden)
-      .send({ message: errors.messages.forbiddenError });
+    ? card
+      .delete()
+      .then((data) => {
+        if (!data) {
+          throw new NotFoundError();
+        }
+        return res.send({ data });
+      })
+      .catch((err) => next(err.name === names.Cast ? new BadRequestError() : err))
+    : next(new ForbiddenError());
 };
 
-module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
+module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.id,
   { $addToSet: { likes: req.user._id } },
   options,
 )
   .populate(defaultPopulation)
-  .then((data) => (data
-    ? res.send({ data })
-    : res
-      .status(StatusCodes.notFound)
-      .send({ message: errors.messages.castError })))
-  .catch((err) => {
-    if (err.name === errors.names.validation) {
-      return res
-        .status(StatusCodes.badRequest)
-        .send({ message: errors.messages.validationError });
+  .then((data) => {
+    if (!data) {
+      throw new NotFoundError();
     }
-    return err.name === errors.names.cast
-      ? res
-        .status(StatusCodes.badRequest)
-        .send({ message: errors.messages.castError })
-      : res
-        .status(StatusCodes.internalServerError)
-        .send({ message: errors.messages.default });
-  });
+    return res.send({ data });
+  })
+  .catch((err) => {
+    if (err.name === names.Validation || err.name === names.Cast) {
+      throw new BadRequestError();
+    }
+    next(err);
+  })
+  .catch(next);
 
-module.exports.unLikeCard = (req, res) => Card.findByIdAndUpdate(
+module.exports.unLikeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.id,
   { $pull: { likes: req.user._id } },
   options,
 )
   .populate(defaultPopulation)
-  .then((data) => (data
-    ? res.send({ data })
-    : res
-      .status(StatusCodes.notFound)
-      .send({ message: errors.messages.castError })))
-  .catch((err) => {
-    if (err.name === errors.names.validation) {
-      return res
-        .status(StatusCodes.badRequest)
-        .send({ message: errors.messages.validationError });
+  .then((data) => {
+    if (!data) {
+      throw new NotFoundError();
     }
-    return err.name === errors.names.cast
-      ? res
-        .status(StatusCodes.badRequest)
-        .send({ message: errors.messages.castError })
-      : res
-        .status(StatusCodes.internalServerError)
-        .send({ message: errors.messages.default });
-  });
+    return res.send({ data });
+  })
+  .catch((err) => {
+    if (err.name === names.Validation || err.name === names.Cast) {
+      throw new BadRequestError();
+    }
+    next(err);
+  })
+  .catch(next);

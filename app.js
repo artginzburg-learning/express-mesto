@@ -5,12 +5,12 @@ const helmet = require('helmet');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
-const errors = require('./helpers/errors');
-const { StatusCodes } = require('./helpers/StatusCodes');
-
 const { createUser, login } = require('./controllers/users');
 
 const auth = require('./middlewares/auth');
+
+const { StatusCodes } = require('./helpers/StatusCodes');
+const { messages } = require('./helpers/messages');
 
 const { PORT = 3000, HOST = 'localhost' } = process.env;
 
@@ -32,29 +32,21 @@ app.use(cookieParser());
 
 app.use(express.json());
 
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post(['/signup', '/register', '/reg'], createUser);
+app.post(['/signin', '/login'], login);
 
 app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-// app.use((err, req, res, next) => {
-//   const { statusCode = 500, message } = err;
+app.use((err, req, res) => {
+  const {
+    statusCode = StatusCodes.internal,
+    message = messages.internal,
+  } = err;
 
-//   res
-//     .status(statusCode)
-//     .send({
-//       // проверяем статус и выставляем сообщение в зависимости от него
-//       message: statusCode === 500
-//         ? 'На сервере произошла ошибка'
-//         : message,
-//     });
-// });
-
-app.use((req, res) => res
-  .status(StatusCodes.notFound)
-  .send({ message: errors.messages.castError }));
+  res.status(statusCode).send({ message });
+});
 
 app.listen(PORT, () => console.log(`API listening on http://${HOST}:${PORT}`));
