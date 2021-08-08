@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const envPath = '../.env';
 
-const staticEnv = 'NODE_ENV=production\nJWT_SECRET=';
+const staticEnv = '# Auto-generated on `npm i` (npm run prepare)\nNODE_ENV=production\nJWT_SECRET=';
 
 const JWT_SECRET = crypto.randomBytes(32).toString('hex');
 
