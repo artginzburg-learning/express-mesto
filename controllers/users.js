@@ -53,8 +53,12 @@ module.exports.createUser = (req, res, next) => bcrypt.hash(req.body.password, 1
   .then((hash) => User.create({
     email: req.body.email,
     password: hash,
-  }).select('-password'))
-  .then((data) => res.status(StatusCodes.created).send({ data }))
+  }))
+  .then((dataWithPassword) => {
+    const data = dataWithPassword;
+    data.password = undefined;
+    return res.status(StatusCodes.created).send({ data });
+  })
   .catch((err) => {
     if (err.name === names.Mongo && err.code === StatusCodes.mongo) {
       throw new ConflictError();

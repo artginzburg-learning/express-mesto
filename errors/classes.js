@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-const messages = require('../helpers/messages');
+const { messages } = require('../helpers/messages');
 
 class BadRequestError extends Error {
   constructor(message = messages.badRequest) {

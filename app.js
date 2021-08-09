@@ -11,6 +11,8 @@ const { createUser, login } = require('./controllers/users');
 const { validateRegister, validateLogin } = require('./middlewares/validation');
 const auth = require('./middlewares/auth');
 
+const { NotFoundError } = require('./errors/classes');
+
 const { StatusCodes } = require('./helpers/StatusCodes');
 const { messages } = require('./helpers/messages');
 
@@ -38,20 +40,23 @@ app.use(
 app.post('/signup', validateRegister, createUser);
 app.post('/signin', validateLogin, login);
 
-app.use(auth);
+app.use('/users', auth, require('./routes/users'));
+app.use('/cards', auth, require('./routes/cards'));
 
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
+app.use('*', () => {
+  throw new NotFoundError(messages.notFound);
+});
 
 app.use(
   errors(),
-  (err, req, res) => {
+  (err, req, res, next) => {
     const {
       statusCode = StatusCodes.internal,
       message = messages.internal,
     } = err;
 
     res.status(statusCode).send({ message });
+    next();
   },
 );
 
