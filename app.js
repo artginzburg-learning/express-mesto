@@ -35,8 +35,8 @@ app.use(
   express.json(),
 );
 
-app.post(['/signup', '/register', '/reg'], validateRegister, createUser);
-app.post(['/signin', '/login'], validateLogin, login);
+app.post('/signup', validateRegister, createUser);
+app.post('/signin', validateLogin, login);
 
 app.use(auth);
 
