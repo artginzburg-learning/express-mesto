@@ -2,6 +2,10 @@
 
 > Фронтенд здесь будет чуть позже
 
+Project 13: <kbd>[Reviewed and accepted version of the project](https://github.com/artginzburg/express-mesto/tree/project-13_review-2-final)</kbd>
+
+Project 14: <kbd>Currently in development...</kbd>
+
 ## Директории
 
 `/middlewares` — папка с "прослойками" приложения
