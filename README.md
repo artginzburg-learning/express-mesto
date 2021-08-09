@@ -35,3 +35,14 @@ Project 14: <kbd>Currently in development...</kbd>
 - [Чеклист 13](https://code.s3.yandex.net/web-developer/checklists/new-program/checklist-13/index.html)
 
 - [Чеклист 14](https://code.s3.yandex.net/web-developer/checklists/new-program/checklist-14/index.html)
+
+<br>
+<br>
+
+<p align="center">
+  <a href="https://github.com/artginzburg/react-mesto-auth"><-- Prev.</a>
+  &nbsp;
+  <code><a href="https://github.com/artginzburg/yandex.praktikum-portfolio">Portfolio</a></code>
+  &nbsp;
+  <a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+</p>
