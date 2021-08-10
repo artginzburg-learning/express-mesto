@@ -117,8 +117,10 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: tokenExpiration.sec });
-
+      const token = jwt.sign(
+        // eslint-disable-next-line no-underscore-dangle
+        { _id: user._doc._id }, JWT_SECRET, { expiresIn: tokenExpiration.sec },
+      );
       res
         .cookie('jwt', token, {
           maxAge: tokenExpiration.ms,

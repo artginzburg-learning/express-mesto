@@ -1,12 +1,19 @@
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, CelebrateError, Joi } = require('celebrate');
 const { isValidObjectId } = require('mongoose');
 const { isURL } = require('validator');
+
+const { messages } = require('../helpers/messages');
 
 const { minlength, maxlength } = require('../models/helpers/stringWithConstrainedLength');
 
 const StringRequired = Joi.string().required();
 const StringWithConstrainedLength = Joi.string().min(minlength).max(maxlength);
-const StringUri = Joi.string().custom((v) => isURL(v, { require_protocol: true }));
+const StringUri = Joi.string().custom((v) => {
+  if (!isURL(v, { require_protocol: true })) {
+    throw new CelebrateError(messages.badRequest);
+  }
+  return v;
+});
 
 const celebrateJoiBody = (obj) => celebrate({
   body: Joi.object().keys(obj),
