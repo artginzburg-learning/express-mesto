@@ -47,7 +47,12 @@ const validateCard = celebrateJoiBody({
 
 const validateObjectId = celebrate({
   params: Joi.object().keys({
-    id: StringRequired.custom(isValidObjectId),
+    id: StringRequired.custom((v) => {
+      if (!isValidObjectId(v)) {
+        throw new CelebrateError(messages.badRequest);
+      }
+      return v;
+    }),
   }),
 });
 
