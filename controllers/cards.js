@@ -27,6 +27,8 @@ module.exports.getCards = (req, res, next) => Card.find({})
 module.exports.deleteCard = async (req, res, next) => {
   const card = await Card.findById(req.params.id);
 
+  console.log(card);
+
   return card.owner.toString() === req.user._id
     ? card
       .delete()
