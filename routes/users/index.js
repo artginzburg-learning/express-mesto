@@ -8,10 +8,9 @@ const { validateObjectId } = require('../../middlewares/validation');
 
 const meRouter = require('./me');
 
-router.get('/', getUsers);
-
-router.get('/:id', validateObjectId, findUser);
-
 router.use('/me', meRouter);
+
+router.get('/', getUsers);
+router.get('/:id', validateObjectId, findUser);
 
 module.exports = router;

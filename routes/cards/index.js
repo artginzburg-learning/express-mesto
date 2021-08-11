@@ -8,9 +8,9 @@ const { validateCard, validateObjectId } = require('../../middlewares/validation
 
 const idRouter = require('./id');
 
+router.use('/:id', validateObjectId, idRouter);
+
 router.get('/', getCards);
 router.post('/', validateCard, createCard);
-
-router.use('/:id', validateObjectId, idRouter);
 
 module.exports = router;
