@@ -25,19 +25,18 @@ module.exports.getCards = (req, res, next) => Card.find({})
   .catch(next);
 
 module.exports.deleteCard = async (req, res, next) => {
-  const card = await Card.findById(req.params.id);
-
-  console.log(card);
+  let card;
+  try {
+    card = await Card.findById(req.params.id)
+      .orFail(new NotFoundError());
+  } catch (error) {
+    return next(error);
+  }
 
   return card.owner.toString() === req.user._id
     ? card
       .delete()
-      .then((data) => {
-        if (!data) {
-          throw new NotFoundError();
-        }
-        return res.send({ data });
-      })
+      .then((data) => res.send({ data }))
       .catch((err) => next(err.name === names.Cast ? new BadRequestError() : err))
     : next(new ForbiddenError());
 };
