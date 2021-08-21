@@ -8,6 +8,7 @@ const { errors } = require('celebrate');
 
 const { createUser, login } = require('./controllers/users');
 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { validateRegister, validateLogin } = require('./middlewares/validation');
 const auth = require('./middlewares/auth');
 
@@ -37,6 +38,8 @@ app.use(
   express.json(),
 );
 
+app.use(requestLogger);
+
 app.post('/signup', validateRegister, createUser);
 app.post('/signin', validateLogin, login);
 
@@ -46,6 +49,8 @@ app.use('/cards', auth, require('./routes/cards'));
 app.use('*', () => {
   throw new NotFoundError(messages.notFound);
 });
+
+app.use(errorLogger);
 
 app.use(
   errors(),
