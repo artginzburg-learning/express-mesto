@@ -28,10 +28,11 @@ app.use(
   }),
   helmet(),
   cors({
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   }),
 );
+
+app.options('*', cors());
 
 app.use(
   cookieParser(),
