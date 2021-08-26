@@ -15,9 +15,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((data) => res
-      .status(StatusCodes.created)
-      .send({ data: data.populate(defaultPopulation) }))
+    .then((data) => res.status(StatusCodes.created).send({ data }))
     .catch((err) => next(err.name === names.Validation ? new BadRequestError() : err));
 };
 
