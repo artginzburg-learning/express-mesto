@@ -125,7 +125,7 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: tokenExpiration.ms,
           httpOnly: true,
-          sameSite: true,
+          sameSite: false,
         })
         .send({ message: messages.ok });
     })
