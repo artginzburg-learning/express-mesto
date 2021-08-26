@@ -18,6 +18,10 @@ const options = {
   new: true,
 };
 
+const tokenExpiration = { days: 7 };
+tokenExpiration.sec = 60 * 60 * 24 * tokenExpiration.days;
+tokenExpiration.ms = 1000 * tokenExpiration.sec;
+
 module.exports.getUsers = (req, res, next) => User.find({})
   .then((data) => res.send({ data }))
   .catch(next);
@@ -108,10 +112,6 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .catch(next);
 };
 
-const tokenExpiration = { days: 7 };
-tokenExpiration.sec = 60 * 60 * 24 * tokenExpiration.days;
-tokenExpiration.ms = 1000 * tokenExpiration.sec;
-
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -130,4 +130,9 @@ module.exports.login = (req, res, next) => {
         .send({ message: messages.ok });
     })
     .catch(() => next(new UnauthorizedError()));
+};
+
+module.exports.logout = (req, res, next) => {
+  res.clearCookie('jwt').send({ message: messages.ok });
+  next();
 };
