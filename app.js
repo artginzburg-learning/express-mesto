@@ -21,12 +21,6 @@ const { PORT = 3000, HOST = 'localhost' } = process.env;
 
 const app = express();
 
-const corsWhitelist = [
-  'https://m.e.s.t.o.nomoredomains.rocks',
-  'https://api.m.e.s.t.o.nomoredomains.rocks',
-  'https://localhost:3000',
-];
-
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // in 15m...
@@ -35,17 +29,15 @@ app.use(
   helmet(),
   cors({
     credentials: true,
-    origin(origin, callback) {
-      if (corsWhitelist.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: [
+      'https://m.e.s.t.o.nomoredomains.rocks',
+      'https://api.m.e.s.t.o.nomoredomains.rocks',
+      'https://localhost:3000',
+    ],
   }),
 );
 
-app.options('*', cors());
+app.options('*', cors()); // preflight request
 
 app.use(
   cookieParser(),
