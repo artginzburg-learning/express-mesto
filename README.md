@@ -1,6 +1,6 @@
-# Проект Mesto фронтенд + бэкенд
+# Проект Mesto бэкенд
 
-> Фронтенд здесь будет чуть позже
+> К фронтенду можно перейти, нажав "Next" в футере Readme
 
 Project 13: <kbd>[Reviewed and accepted version of the project](https://github.com/artginzburg/express-mesto/tree/project-13_review-2-final)</kbd>
 
